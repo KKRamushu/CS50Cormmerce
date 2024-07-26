@@ -1,0 +1,115 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+
+
+
+<div class="">
+  <div class="listing-view-container">
+    <div class="col">
+      <div class="card text-center mb-3 listing-col" >   
+        <h5 class="card-title listing-tittle">{{listing.title}}</h5>    
+        <div class="listing-image listing-view-div ">
+          <img src="{{listing.imageUrl}}" class="card-img listing-view-img" alt="no image provided">
+        </div>
+          
+        <div class=" details" style="max-width: 100%;">
+          <h5 class="card-title ">Price: ${{listing.price}}</h5>
+          <p class="listing-description ">{{listing.discription}}</p>
+          {% if user != listing.seller %}
+            <p class="text-body-secondary time-stamp">Listed by <strong style="font-weight: bold; font-size: large;">{{listing.seller}}</strong> on <small class="text-body-secondary">{{listing.date}}</small></p>
+            {% if myBid %}
+              {% if listing.price > myBid %}
+              <p class="losingBid" style="font-weight: bolder;">You are loosing this auction... Bid higher!!</p>
+              {% else %}
+              <p class="winningBid" style="font-weight: bolder;">You are winning this auction!</p>  
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          {% if user.is_authenticated %}
+          {% endif %}
+          <div class="bid-comment-icon">
+            <p class="icon"><img src="https://cdn-icons-png.flaticon.com/128/2581/2581347.png" alt="" class="bid-img">{{bids}}</p> 
+            <p class="icon"><img src="https://cdn-icons-png.flaticon.com/128/1380/1380338.png" alt="" class="comment-img">{{noComments}} </p>
+          </div>
+          {% if user.is_authenticated %}
+            {% if user == listing.seller %}
+              <form action="{% url 'close' %}" method="post">
+                {% csrf_token %}
+                <div class="close-btn-div">
+                  <input type="hidden"  name="listing" value="{{listing.id}}">
+                  <input type="submit" class="btn btn-primary btn-danger close-btn" value="Close Auction">
+                </div>
+              </form>
+            {% else %}
+              <form action="{% url 'bid' %}" method="post">
+              {% csrf_token %}
+                <input type="hidden" name="item" value="{{listing.id}}">
+                {% if massage == 'success' %}
+                  <p class="success-massage">Bid placed successfully</p>
+                {% elif massage == 'fail' %}
+                  <p class="failure-massage">Bid not placed, increase bid amount</p>
+                {% endif %}
+                <div class="input-group-bid">
+                  <input type="submit" class="btn btn-primary btn-success btn-bid" value="Place Bid">
+                  <input class="form-control input-bid" type="number" name="bidAmount" placeholder="Bid Amount" required>
+                </div>
+                  
+              </form>
+            {%endif%}
+            <div class="watchlist-btn-div">  
+              {% if inWatchList %}
+                <a href=" {% url 'removeWatchlist' item=listing.title %}  ">
+                  <button type="button" class="btn btn-primary btn-warning btn-watchlist">Remove from Watchlist</button>
+                </a>
+              {% else %}
+                <a href=" {% url 'watchlist' item=listing.title %}  ">
+                  <button type="button" class="btn btn-primary btn-warning btn-watchlist">Add to Watchlist</button>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>       
+      </div>
+    </div>
+
+    <div class="col comments-view card mb-3" style="max-height: 100%;">
+      {% if user.is_authenticated %}
+      <form action="{% url 'comment' %}" method="post">
+        {% csrf_token %}
+          <input type="hidden" name="item" value="{{listing.id}}">
+          <div class="input-group">
+            <input type="submit" class="input-group-text btn-primary btn-sm btn" value="Post">
+            <textarea class="form-control text-input" name="comment" placeholder="comment" required></textarea>
+          </div>
+      </form>
+      {% else %}
+        <div class="not-logged-in-div input-group">
+          <h5>You're not signed in...</h5> <a class="nav-link" href="{% url 'login' %}">Log In </a> <h5>or</h5> <a class="nav-link" href="{% url 'register' %}"> Register</a><h5> to comment</h5>
+        </div>
+      {% endif %}
+      {% if comments %}
+        <div class="comments-div">
+          {% for comment in comments %}
+            <div class="comment-container">
+              <strong style="font-weight: bold;">{{comment.user}}</strong>
+              <p class="" style="font-style: italic; font-size: small;">{{comment.comment}}</p>
+              <div class="timestamp-div">
+                <p class="time-stamp"><small class="text-body-secondary">{{comment.date}}</small></p>
+              </div>
+              
+            </div>
+            <hr class="comment-divider">
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-comments-div">
+          <h1 class="empty-comments" style="font-weight: bold;">"No Comments"</h1>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

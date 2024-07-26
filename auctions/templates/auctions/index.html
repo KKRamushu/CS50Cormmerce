@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+             
+    <div class="category-div">
+ 
+        <h5>Categories</h5> 
+        <div class="btn-group category-btn-group" role="group" aria-label="Basic outlined example">
+            <a href="{% url 'index' %}">
+                <input type="button" class="btn btn-outline-primary btn-category {% if activeCategory == 'all' %}active{% endif %}" style="width: 7rem;" aria-current="index.html" value="All">
+            </a>
+            {% for category in categories %}
+                <form action="{% url 'index' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="category" value="{{category}}">
+                    <input type="submit" class="btn btn-outline-primary btn-category {% if activeCategory == category %}active{% endif %}" style="width: 7rem;" value="{{category}}">
+                </form>
+            {% endfor %} 
+        </div>
+    </div>
+        
+    <div class="listing-div">
+        {% for listing in activeListings %}            
+            <a class="card-1" href=" {% url 'listing' item=listing.title %}  ">
+                <div class="card text-center mb-3 card-div" >
+
+                        <div class="listing-image">
+                            <img src="{{listing.imageUrl}}" class="card-img" alt="no image provided">
+                        </div> 
+                        <div class="listing-info" >
+                            <h5 class="card-title">{{listing.title}}</h5>
+                            <p class="card-text ">{{listing.discription}}</p>
+                            <h5>Price: ${{ listing.price}}</h5>
+                        </div>
+                    
+                </div>
+            </a>
+        {% endfor %}
+    </div>  
+{% endblock %}

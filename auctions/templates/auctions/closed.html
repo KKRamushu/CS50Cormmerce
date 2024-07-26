@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+  <!---
+    <div class="listing-div">
+
+        {%if user == listing.winner %}
+        <p>Congradulations {{listing.winner}} you have won this auction</p>
+        {%else%}
+        <p>{{listing.winner}} has won this auction</p>
+        {%endif%}
+        <h3>{{listing.title}}</h3>
+        <img src="{{listing.imageUrl}}" alt="no image provided">
+        <h5>Price:{{ listing.price}}</h5>
+        <p>{{listing.discription}}</p>
+              
+    </div>
+-->
+<h2>Closed Listings</h2>
+    <div class="listing-div">
+        {% for listing in closedListings %}            
+            <a class="card-1" href=" {% url 'winner' item=listing.title %}  ">
+                <div class="card text-center mb-3 card-div">
+                    <div class="card-body">
+                        <div class="listing-image">
+                            <img src="{{listing.imageUrl}}" class="card-img" alt="no image provided">
+                        </div>  
+                        <div class="listing-info">
+                            <h5 class="card-title">{{listing.title}}</h5>
+                            <h5>closing Price: ${{ listing.price}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}    
+    </div>
+    
+    
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card text-center mb-3 listing-col" >   
+        <h5 class="card-title listing-tittle">{{listing.title}}</h5>    
+        <div class="listing-image listing-view-div ">
+          <img src="{{listing.imageUrl}}" class="card-img listing-view-img" alt="no image provided">
+        </div>
+          
+        <div class=" details" style="max-width: 100%;">
+          <h5 class="card-title ">Price: ${{listing.price}}</h5>
+          <p class="listing-description ">{{listing.discription}}</p>
+          {% if user != listing.seller %}
+          <p class="text-body-secondary">Listed by <strong>{{listing.seller}}</strong> on <small class="text-body-secondary">{{listing.date}}</small></p>
+          {% endif %}
+          {% if user.is_authenticated %}
+          {% endif %}
+
+          {% if user.is_authenticated %}
+          <p><img src="https://cdn-icons-png.flaticon.com/128/2581/2581347.png" alt="" class="bid-img">{{bids}} BID(S)</p>
+            {% if user == listing.seller %}
+              <form action="{% url 'close' %}" method="post">
+                {% csrf_token %}
+                <div class="close-btn-div">
+                  <input type="hidden"  name="listing" value="{{listing.id}}">
+                  <input type="submit" class="btn btn-primary btn-danger close-btn" value="Close Auction">
+                </div>
+              </form>
+            {% else %}
+              <form action="{% url 'bid' %}" method="post">
+              {% csrf_token %}
+                <input type="hidden" name="item" value="{{listing.id}}">
+                {% if massage == 'success' %}
+                  <p class="success-massage">Bid placed successfully</p>
+                {% elif massage == 'fail' %}
+                  <p class="failure-massage">Bid not placed, increase bid amount</p>
+                {% endif %}
+                <div class="input-group-bid">
+                  <input type="submit" class="btn btn-primary btn-success btn-bid" value="Place Bid">
+                  <input class="form-control input-bid" type="number" name="bidAmount" placeholder="Bid Amount" required>
+                </div>
+                  
+              </form>
+            {%endif%}
+            <div class="watchlist-btn-div">  
+              {% if inWatchList %}
+                <a href=" {% url 'removeWatchlist' item=listing.title %}  ">
+                  <button type="button" class="btn btn-primary btn-warning btn-watchlist">Remove from Watchlist</button>
+                </a>
+              {% else %}
+                <a href=" {% url 'watchlist' item=listing.title %}  ">
+                  <button type="button" class="btn btn-primary btn-warning btn-watchlist">Add to Watchlist</button>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>       
+      </div>
+    </div>
+
+    
+  </div>
+</div>
+
+{% endblock %}

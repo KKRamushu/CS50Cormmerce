@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="listing-view-container">
+  <div class="listing-col ">   
+    <h5 class="card-title listing-tittle">{{listing.title}}</h5>     
+    <div class="listing-image listing-view-div ">
+      <img src="{{listing.imageUrl}}" class="card-img listing-view-img" alt="no image provided">
+    </div>
+    <div class="listing-info details" style="max-width: 100%;">
+      <h5 class="card-title">Closing Price: ${{listing.price}}</h5>
+      <p class="card-text">{{listing.discription}}</p>
+      <p>Listed by {{listing.seller}}</p>
+      {% if user.is_authenticated %}
+        {%if user == listing.winner %}
+          <p>Congradulations {{listing.winner}} you have won this auction</p>
+        {%else%}
+          <p><strong>{{listing.winner}}</strong> has won this auction</p>
+        {%endif%}
+      {% endif %}
+    </div>              
+  </div>
+</div>
+{% endblock %}
