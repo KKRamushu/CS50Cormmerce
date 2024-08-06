@@ -86,7 +86,7 @@
       </form>
       {% else %}
         <div class="not-logged-in-div input-group">
-          <h5>You're not signed in...</h5> <a class="nav-link" href="{% url 'login' %}">Log In </a> <h5>or</h5> <a class="nav-link" href="{% url 'register' %}"> Register</a><h5> to comment</h5>
+          <h5>You're not signed in...</h5> <a  href="{% url 'login' %}"><p>Log In</p> </a> <h5>or</h5> <a href="{% url 'register' %}"><p>Register</p> </a><h5> to comment</h5>
         </div>
       {% endif %}
       {% if comments %}

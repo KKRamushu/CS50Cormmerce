@@ -166,7 +166,6 @@ def placeBid(request):
                 listing.watchlist.add(request.user)
                 massage = "success"
                 return (viewListing(request,listing.title, massage))
-            # return HttpResponseRedirect(reverse("listing"))
             else:
                 massage = "fail"
                 return (viewListing(request,listing.title, massage))
@@ -177,6 +176,7 @@ def placeBid(request):
                 bid.save()
                 listing.price = bidAmount
                 listing.save()
+                addToWatchlist(request, listing)
                 massage = "Bid placed successfully"
                 return (viewListing(request,listing.title, massage))
             else:
