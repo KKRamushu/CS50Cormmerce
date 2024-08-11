@@ -170,17 +170,17 @@ def placeBid(request):
                 massage = "fail"
                 return (viewListing(request,listing.title, massage))
         else:
-            if bidAmount >= itemPrice:
+            if bidAmount > itemPrice:
                 bid = Bids(bidder = request.user, item = listing, bid_price = bidAmount )
                 newPrice = Listing(price = bidAmount)
                 bid.save()
                 listing.price = bidAmount
                 listing.save()
                 addToWatchlist(request, listing)
-                massage = "Bid placed successfully"
+                massage = "success"
                 return (viewListing(request,listing.title, massage))
             else:
-                massage = "Bid not placed, increase bid amount"
+                massage = "fail"
                 return (viewListing(request,listing.title, massage))
             
 def comment(request):
